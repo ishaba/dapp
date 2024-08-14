@@ -15,24 +15,24 @@ export default async function Page() {
   const address = "0x0000000000000000000000000000000000000000";
   const balance = 0;
   return (
-    <main className="flex min-h-screen lg:-mb-20 flex-col items-center p-6 lg:p-24">
+    <main className="flex min-h-screen flex-col items-center p-6 lg:-mb-20 lg:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <div className=" flex w-full justify-center pb-6 pt-8 lg:static lg:w-auto lg:rounded-xl lg:p-4 font-bold">
-          <Link href="/" className="flex hover:text-sky-400 relative group">
-            <BxChevronLeft className="opacity-0 absolute top-0 -left-5 translate-x-1 group-hover:opacity-40 group-hover:translate-x-0 transition-all duration-100 ease-out group-hover:duration-200" />
+        <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
+          <Link href="/" className="group relative flex hover:text-sky-400">
+            <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-40 group-hover:duration-200" />
             <UilTransaction className="mr-2" />
             Transactions Explorer App
           </Link>
         </div>
-        <div className=" flex w-full justify-center pb-6 pt-8 lg:static lg:w-auto lg:rounded-xl lg:p-4 font-bold">
+        <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <div>
             <span className="opacity-50">Address:</span> {address}
-            <button className="inline-block align-top ml-2 opacity-50 transition-opacity duration-300 ease-out hover:opacity-100 active:scale-95" title="Copy to clipboard">
+            <button className="ml-2 inline-block align-top opacity-50 transition-opacity duration-300 ease-out hover:opacity-100 active:scale-95" title="Copy to clipboard">
               <UilCopy />
             </button>
           </div>
         </div>
-        <div className=" flex w-full justify-center pb-6 pt-8 lg:static lg:w-auto lg:rounded-xl lg:p-4 font-bold">
+        <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <div>
             <span className="opacity-50">Balance:</span> {balance}
           </div>
@@ -43,21 +43,21 @@ export default async function Page() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-b-white/10">
-              <th className="text-left p-2 opacity-40">Hash</th>
-              <th className="text-center p-2 opacity-40">Timestamp</th>
-              <th className="text-right p-2 opacity-40">Amount</th>
+              <th className="p-2 text-left opacity-40">Hash</th>
+              <th className="p-2 text-center opacity-40">Timestamp</th>
+              <th className="p-2 text-right opacity-40">Amount</th>
             </tr>
           </thead>
           <tbody>
             {transactions.map(({ hash, timeStamp, amount }) => (
               <tr className="border-b border-b-white/10 transition-colors hover:bg-black/5 hover:dark:bg-white/5">
-                <td className="text-left p-2">
+                <td className="p-2 text-left">
                   <Link className="text-sky-400" href={`/tx/${hash}`}>
                     {hash}
                   </Link>
                 </td>
-                <td className="text-center p-2">{timeStamp}</td>
-                <td className="text-right p-2">{amount}</td>
+                <td className="p-2 text-center">{timeStamp}</td>
+                <td className="p-2 text-right">{amount}</td>
               </tr>
             ))}
           </tbody>
