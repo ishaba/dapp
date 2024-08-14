@@ -15,7 +15,7 @@ const transaction = {
   price: "1.47119172 Gwei (0.00000000147119172 ETH)",
 };
 
-export default async function Page() {
+export default async function TxPage() {
   return (
     <main className="flex min-h-screen flex-col items-center p-6 lg:-mb-20 lg:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -23,7 +23,7 @@ export default async function Page() {
           <Link href="/" className="group relative flex hover:text-sky-400">
             <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-40 group-hover:duration-200" />
             <UilTransaction className="mr-2" />
-            Transactions Explorer App
+            Transactions Explorer
           </Link>
         </div>
         <div className="flex w-full pb-6 pt-8 font-bold lg:static lg:w-auto lg:justify-center lg:rounded-xl lg:p-4">

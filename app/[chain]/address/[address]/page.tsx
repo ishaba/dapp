@@ -15,7 +15,7 @@ const transactions = [
   },
 ];
 
-export default function Page({ params: { address } }: { params: { address: string } }) {
+export default function AddressPage({ params: { address } }: { params: { address: string } }) {
   const balance = 0;
 
   const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}`, fetcher);
@@ -29,7 +29,7 @@ export default function Page({ params: { address } }: { params: { address: strin
           <Link href="/" className="group relative flex hover:text-sky-400">
             <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-40 group-hover:duration-200" />
             <UilTransaction className="mr-2" />
-            Transactions Explorer App
+            Transactions Explorer
           </Link>
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">

@@ -1,12 +1,13 @@
 import "./globals.css";
 
+import ChainProvider from "./ChainProvider";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Transactions Explorer App",
+  title: "Transactions Explorer",
   description: "Ethereum and Polygon Transactions List",
 };
 
@@ -18,8 +19,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
-        <div className="text-xs opacity-50 p-4 text-center">&copy; 2024 TransactionsExplorer</div>
+        <ChainProvider>{children}</ChainProvider>
+        <div className="p-4 text-center text-xs opacity-50">&copy; 2024 Transactions Explorer</div>
       </body>
     </html>
   );
