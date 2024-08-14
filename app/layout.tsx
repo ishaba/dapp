@@ -17,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        <div className="text-xs opacity-50 p-4 text-center">&copy; 2024 TransactionsExplorer</div>
+      </body>
     </html>
   );
 }
