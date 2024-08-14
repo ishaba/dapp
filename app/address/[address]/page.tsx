@@ -1,19 +1,27 @@
+"use client";
+
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import UilCopy from "~icons/uil/copy";
 import UilTransaction from "~icons/uil/transaction";
+import fetcher from "@/utils/fetcher";
+import useSWR from "swr";
 
 const transactions = [
   {
-    hash: "0x0000000000000000000000000000000000000000",
+    hash: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
     timeStamp: "1 min ago",
     amount: "0.0001",
   },
 ];
 
-export default async function Page() {
-  const address = "0x0000000000000000000000000000000000000000";
+export default function Page({ params: { address } }: { params: { address: string } }) {
   const balance = 0;
+
+  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}`, fetcher);
+
+  console.log(data, isLoading, error);
+
   return (
     <main className="flex min-h-screen flex-col items-center p-6 lg:-mb-20 lg:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -50,7 +58,7 @@ export default async function Page() {
           </thead>
           <tbody>
             {transactions.map(({ hash, timeStamp, amount }) => (
-              <tr className="border-b border-b-white/10 transition-colors hover:bg-black/5 hover:dark:bg-white/5">
+              <tr key={hash} className="border-b border-b-white/10 transition-colors hover:bg-black/5 hover:dark:bg-white/5">
                 <td className="p-2 text-left">
                   <Link className="text-sky-400" href={`/tx/${hash}`}>
                     {hash}
