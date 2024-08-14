@@ -1,8 +1,8 @@
 "use client";
 
+import AddressEntry from "@/utils/fetcher";
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
-import UilCopy from "~icons/uil/copy";
 import UilTransaction from "~icons/uil/transaction";
 import fetcher from "@/utils/fetcher";
 import useSWR from "swr";
@@ -33,12 +33,7 @@ export default function Page({ params: { address } }: { params: { address: strin
           </Link>
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
-          <div>
-            <span className="opacity-50">Address:</span> {address}
-            <button className="ml-2 inline-block align-top opacity-50 transition-opacity duration-300 ease-out hover:opacity-100 active:scale-95" title="Copy to clipboard">
-              <UilCopy />
-            </button>
-          </div>
+          <AddressEntry address={address} />
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <div>

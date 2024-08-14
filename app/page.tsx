@@ -10,11 +10,11 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-6 lg:-mb-14 lg:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <div className="flex w-full justify-center pb-6 pt-8 font-bold backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:p-4">
+        <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <UilTransaction className="mr-2" />
           Transactions Explorer App
         </div>
-        <div className="flex w-full justify-center pb-6 pt-8 font-bold backdrop-blur-2xl lg:static lg:w-auto lg:rounded-xl lg:p-4">
+        <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <select name="" id="" className="bg-transparent">
             <option value="">Ethereum</option>
             <option value="">Polygon</option>
@@ -36,7 +36,7 @@ export default function Home() {
         <div className="mb-4 text-xs opacity-60 lg:w-full lg:text-left">Recently viewed:</div>
         <div className="text-center lg:mb-0 lg:w-full lg:text-left">
           {recentlyViewed.map((address) => (
-            <Link href={`/address/${address}`} className="group border-b border-transparent text-sky-400 transition-colors hover:border-gray-300 hover:dark:border-neutral-700">
+            <Link key={address} href={`/address/${address}`} className="group border-b border-transparent text-sky-400 transition-colors hover:border-gray-300 hover:dark:border-neutral-700">
               <span className="text-lg font-semibold">{address}</span>
             </Link>
           ))}
