@@ -1,6 +1,6 @@
 "use client";
 
-import AddressEntry from "@/utils/fetcher";
+import AddressEntry from "@/components/AddressEntry";
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import UilTransaction from "~icons/uil/transaction";
