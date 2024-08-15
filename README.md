@@ -18,10 +18,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 [✓] – Add chain based pages
 [✓] – Finish fetch transactions list
 [✓] – Add transactions table sorting
-[ ] – Add fetch transaction details
+[✓] – Add fetch transaction details
 [✓] – Add fetch balance
 [✓] – Style transaction details page
-[ ] – Add fetch transaction fees
 [✓] – Add polygon chain
 [ ] – Add errors handling
 [ ] – Add loading states

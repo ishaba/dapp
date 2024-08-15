@@ -8,12 +8,12 @@ import UilCopy from "~icons/uil/copy";
 const copyInitial = "Copy Address";
 const copySuccess = "Copied!";
 
-export default function CopyButton({ copy }: { copy: string }) {
+export default function CopyButton({ copy }: { copy?: string }) {
   const [copyText, setCopyText] = useState(copyInitial);
 
   function copyAddress() {
     setCopyText(copySuccess);
-    navigator.clipboard.writeText(copy);
+    if (copy) navigator.clipboard.writeText(copy);
   }
 
   useEffect(() => {

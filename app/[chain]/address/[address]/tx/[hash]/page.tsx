@@ -1,25 +1,66 @@
+"use client";
+
+import useSWR from "swr";
 import CopyButton from "@/components/CopyButton";
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import Tooltip from "@/components/Tooltip";
-import { type SupportedChains } from "@/config/constants";
+import fetcher from "@/utils/fetcher";
+import { CHAINS, type SupportedChains } from "@/config/constants";
+import { type Transaction } from "@/config/types";
 import LightningIcon from "~icons/iconamoon/lightning-1";
+import { Address, Hash } from "viem";
+import TimeAgo from "@/components/TimeAgo";
+import { format } from "@/utils/ether";
+import StatusFailIcon from "~icons/clarity/times-circle-solid";
+import StatusSuccessIcon from "~icons/clarity/check-circle-solid";
 
-const transaction = {
-  hash: "0x610f2aee99ac008541ed9fe37ff1205a408074547c6eb7b7667f73d5ab8d987b",
-  status: "Success",
-  block: "20521821 189 Block Confirmations",
-  timestamp: "38 mins ago (Aug-13-2024 07:34:11 PM UTC)|Confirmed within 7 secs",
-  action: "Transfer 0.000037599999409933 ($0.10) ETH To 0x5358335dFC42f9b875D4C5bB18aDD866217dB542",
-  from: "0x8195d57124952742815d636dba4c951d524ea74f",
-  to: "0x5358335dFC42f9b875D4C5bB18aDD866217dB542",
-  value: "0.000037599999409933 ETH ($0.10)",
-  fee: "0.00003089502612 ETH ($0.08)",
-  price: "1.47119172 Gwei (0.00000000147119172 ETH)",
+type TxPageParams = { address: Address; hash: Hash; chain: SupportedChains };
+
+const formatGasPrice = (input?: string) => {
+  if (!input) return;
+  const wei = BigInt(input);
+  const gwei = wei / BigInt(1e9);
+  const decimals = wei % BigInt(1e9);
+  return `${gwei}.${decimals.toString().padStart(9, "0")}`;
 };
 
-export default async function TxPage({ params: { hash, chain } }: { params: { hash: string; chain: SupportedChains } }) {
+const formatWeiToEth = (input?: bigint) => {
+  if (!input) return;
+  const wei = BigInt(input.toString());
+  const eth = wei / BigInt(1e18);
+  const decimals = wei % BigInt(1e18);
+  return eth.toString() + "." + decimals.toString().padStart(18, "0").slice(0, 18);
+};
+
+export default function TxPage({ params: { address, hash, chain } }: { params: TxPageParams }) {
+  // Just realised that etherscan do not have endpoint to get info of tx by it's hash
+  // I was counting on this :/ In order to save the time let's use this approuch as temporary solution
+  // placing tx page under address page
+  // possible bettter would be to make some client side store and get alredy loaded data from there
+  // and we steel need to update this data somehow...
+  // anyway! there is some other tasks which i find better to proceed with atm
+
+  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}&chain=${chain}`, fetcher<{ data: Transaction[] }>, {
+    refreshInterval: 3000,
+  });
+
+  const transactions = data?.data;
+
+  const tx = transactions?.find((tx) => tx.hash === hash);
+
+  if (isLoading) {
+    // TODO: Add loader
+  }
+
+  if (error) {
+    // TODO: Add error handler
+  }
+
+  // TODO:
+  // REquests for addition d
+
   return (
     <main className="flex min-h-screen flex-col items-center p-6 lg:-mb-20 lg:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -41,10 +82,10 @@ export default async function TxPage({ params: { hash, chain } }: { params: { ha
             <div className="w-3/12 text-white/60">
               <Tooltip text="A TxHash or transaction hash is a unique 66-character identifier that is generated whenever a transaction is executed." />
               Transaction Hash:
-            </div>{" "}
-            <div className="w-6/12 break-words">
-              {transaction.hash}
-              <CopyButton copy={transaction.hash} />
+            </div>
+            <div className="w-6/12 break-words font-mono">
+              {tx?.hash}
+              {tx?.hash && <CopyButton copy={tx?.hash} />}
             </div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
@@ -52,21 +93,34 @@ export default async function TxPage({ params: { hash, chain } }: { params: { ha
               <Tooltip text="The status of the transaction." />
               Status:
             </div>
-            <div className="w-6/12">{transaction.status}</div>
+            <div className="w-6/12">
+              {tx?.txreceipt_status === "1" ? (
+                <span className="rounded-md border border-green-300 bg-green-500/20 px-2 py-1 text-xs">
+                  <StatusSuccessIcon className="relative -top-px inline-block" /> Success
+                </span>
+              ) : (
+                <span className="rounded-md border border-red-300 bg-red-500/20 px-2 py-1 text-xs">
+                  <StatusFailIcon className="relative -top-px inline-block" /> Error
+                </span>
+              )}
+            </div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
             <div className="w-3/12 text-white/60">
               <Tooltip text="Number of the block in which the transaction is recorded. Block confirmations indicate how many blocks have been added since the transaction was produced." />
               Block:
             </div>
-            <div className="w-6/12">{transaction.block}</div>
+            <div className="w-6/12">
+              <span className="inline-block align-middle">{tx?.blockNumber}</span>
+              {tx?.confirmations && <span className="ml-2 rounded-md border border-white/20 px-2 py-1 align-middle text-[10px]">{tx?.confirmations} Block Confirmations</span>}
+            </div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
             <div className="w-3/12 text-white/60">
               <Tooltip text="The date and time at which a transaction is produced." />
               Timestamp:
             </div>
-            <div className="w-6/12">{transaction.timestamp}</div>
+            <div className="w-6/12">{tx?.timeStamp && <TimeAgo timeStamp={tx?.timeStamp} />}</div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
             <div className="w-3/12 text-white/60">
@@ -75,7 +129,7 @@ export default async function TxPage({ params: { hash, chain } }: { params: { ha
               </Tooltip>
               Transaction Action:
             </div>
-            <div className="w-6/12 break-words">{transaction.action}</div>
+            <div className="w-6/12 break-words"></div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
             <div className="w-3/12 text-white/60">
@@ -83,10 +137,10 @@ export default async function TxPage({ params: { hash, chain } }: { params: { ha
               From:
             </div>
             <div className="w-6/12 break-words font-mono">
-              <Link className="text-primary" href={`../../address/${transaction.from}`}>
-                {transaction.from}
+              <Link className="text-primary" href={`../../address/${tx?.from}`}>
+                {tx?.from}
               </Link>
-              <CopyButton copy={transaction.from} />
+              <CopyButton copy={tx?.from} />
             </div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
@@ -95,10 +149,10 @@ export default async function TxPage({ params: { hash, chain } }: { params: { ha
               To:
             </div>
             <div className="w-6/12 break-words font-mono">
-              <Link className="text-primary" href={`../../address/${transaction.to}`}>
-                {transaction.to}
+              <Link className="text-primary" href={`../../address/${tx?.to}`}>
+                {tx?.to}
               </Link>
-              <CopyButton copy={transaction.to} />
+              <CopyButton copy={tx?.to} />
             </div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
@@ -106,21 +160,30 @@ export default async function TxPage({ params: { hash, chain } }: { params: { ha
               <Tooltip text="The value being transacted in Ether and fiat value. Note: You can click the fiat value (if available) to see historical value at the time of transaction." />
               Value:
             </div>
-            <div className="w-6/12">{transaction.value}</div>
+            <div className="w-6/12">
+              {format(tx?.value)} {CHAINS[chain].nativeCurrency.symbol}
+            </div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
             <div className="w-3/12 text-white/60">
               <Tooltip text="Amount paid to process the transaction in Ether and fiat value." />
               Transaction Fee:
             </div>
-            <div className="w-6/12">{transaction.fee}</div>
+            <div className="w-6/12">
+              {tx?.gasPrice && tx?.gasUsed ? formatWeiToEth(BigInt(tx?.gasPrice) * BigInt(tx?.gasUsed)) : "0"} {CHAINS[chain].nativeCurrency.symbol}
+            </div>
           </div>
           <div className="flex flex-col p-3 lg:flex-row">
             <div className="w-3/12 text-white/60">
               <Tooltip text="Cost per unit of gas spent for the transaction, in Ether and Gwei." />
               Gas Price:
             </div>
-            <div className="w-6/12">{transaction.price}</div>
+            <div className="w-6/12">
+              {formatGasPrice(tx?.gasPrice)} Gwei
+              <span className="ml-2 opacity-50">
+                ({tx?.gasPrice && tx?.gasUsed ? formatWeiToEth(BigInt(tx?.gasPrice)) : "0"} {CHAINS[chain].nativeCurrency.symbol})
+              </span>
+            </div>
           </div>
         </div>
       </div>

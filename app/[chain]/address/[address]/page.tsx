@@ -101,18 +101,18 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
             </div>
           </div>
 
-          {transactions?.map(({ hash, timeStamp, value }) => (
-            <div key={hash} className="flex border-b border-b-white/10 text-xs transition-colors hover:bg-black/5 hover:dark:bg-white/10">
+          {transactions?.map((tx) => (
+            <div key={tx.hash} className="flex border-b border-b-white/10 text-xs transition-colors hover:bg-black/5 hover:dark:bg-white/10">
               <div className="w-8/12 p-3 text-left font-mono">
-                <Link className="text-primary" href={`../../tx/${hash}`}>
-                  {hash}
+                <Link className="text-primary" href={{ pathname: `./tx/${tx.hash}`, query: { tx: JSON.stringify(tx) } }}>
+                  {tx.hash}
                 </Link>
               </div>
               <div className="w-2/12 p-3 text-left">
-                <TimeAgo timeStamp={timeStamp} />
+                <TimeAgo timeStamp={tx.timeStamp} />
               </div>
               <div className="w-2/12 p-3 text-left font-mono">
-                {format(value)} {CHAINS[chain].nativeCurrency.symbol}
+                {format(tx.value)} {CHAINS[chain].nativeCurrency.symbol}
               </div>
             </div>
           ))}
