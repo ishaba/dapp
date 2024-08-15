@@ -1,11 +1,9 @@
 import { type NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getApiKey, getApiUrl } from "@/utils/api";
-import { CHAIN_IDS, type SupportedChains, type SupportedChainIDs } from "@/config/constants";
-import { Address } from "viem";
+import { getApiKey, getApiUrl, type BalanceApiProps } from "@/utils/api";
 
-const getBalanceUrl = (address: Address, chainID: SupportedChainIDs) => `${getApiUrl(chainID)}?apikey=${getApiKey(chainID)}&module=account&address=${address}&action=balance`;
+const getBalanceApiUrl = ({ address, chain }: BalanceApiProps) => `${getApiUrl(chain)}?apikey=${getApiKey(chain)}&module=account&address=${address}&action=balance`;
 
 type Response = {
   data?: Record<string, string>;
@@ -25,19 +23,20 @@ type ApiResponse = (Omit<Response, "error"> & ResponseError) | (Omit<Response, "
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest, res: NextApiResponse<ApiResponse>) {
-  const { searchParams } = new URL(req.nextUrl);
-  const address = searchParams.get("address") as Address;
-  const chain = searchParams.get("chain") as SupportedChains;
-  const chainID = CHAIN_IDS[chain];
+  const { searchParams } = req.nextUrl;
+  const props = {
+    address: searchParams.get("address"),
+    chain: searchParams.get("chain"),
+  } as BalanceApiProps;
 
-  if (!address) {
+  if (!props.address) {
     return NextResponse.json({ error: "Mising address for balance fetch", status: 500 });
   }
 
-  const transactionsUrl = getBalanceUrl(address, chainID);
+  const balanceUrl = getBalanceApiUrl(props);
 
   try {
-    const data = await fetch(transactionsUrl, {
+    const data = await fetch(balanceUrl, {
       headers: {
         "Content-Type": "application/json",
       },

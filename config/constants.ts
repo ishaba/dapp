@@ -5,13 +5,13 @@ const toLowerCaseTyped = function <S extends string>(input: S) {
 };
 
 export const API_KEYS = {
-  [mainnet.id]: process.env.NEXT_PUBLIC_API_KEY_ETHERSCAN,
-  [polygon.id]: process.env.NEXT_PUBLIC_API_KEY_POLYGONSCAN,
+  [toLowerCaseTyped(mainnet.name)]: process.env.NEXT_PUBLIC_API_KEY_ETHERSCAN,
+  [toLowerCaseTyped(polygon.name)]: process.env.NEXT_PUBLIC_API_KEY_POLYGONSCAN,
 };
 
 export const API_URLS = {
-  [mainnet.id]: mainnet.blockExplorers?.default.apiUrl,
-  [polygon.id]: polygon.blockExplorers?.default.apiUrl,
+  [toLowerCaseTyped(mainnet.name)]: mainnet.blockExplorers?.default.apiUrl,
+  [toLowerCaseTyped(polygon.name)]: polygon.blockExplorers?.default.apiUrl,
 };
 
 export const SUPPORTED_CHAINS = [toLowerCaseTyped(mainnet.name), toLowerCaseTyped(polygon.name)] as const;

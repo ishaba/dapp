@@ -1,11 +1,10 @@
-import useSWR from "swr";
-import fetcher from "@/utils/fetcher";
-
 import { CHAINS, SupportedChains } from "@/config/constants";
-import TokenEth from "~icons/cryptocurrency-color/eth";
-import TokenMatic from "~icons/cryptocurrency-color/matic";
+import { TokenEth, TokenMatic } from "@/config/icons";
+
 import { Address } from "viem";
-import { format } from "@/utils/ether";
+import { formatEther } from "@/utils/ether";
+import { getBalanceFetchUrl } from "@/utils/api";
+import useSWR from "swr";
 
 const TokenLogo = {
   [CHAINS.ethereum.name.toLowerCase()]: <TokenEth />,
@@ -13,11 +12,17 @@ const TokenLogo = {
 };
 
 export default function AddressBalance({ address, chain }: { address: Address; chain: SupportedChains }) {
-  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/balance?address=${address}&chain=${chain}`, fetcher<{ data: string }>, {
-    refreshInterval: 3000,
-  });
+  const { data, isLoading, error } = useSWR<{ data: string }>(getBalanceFetchUrl({ address, chain }));
 
-  const balance = format(data?.data, 3);
+  if (isLoading) {
+    // TODO: Add loader
+  }
+
+  if (error) {
+    // TODO: Add error handler
+  }
+
+  const balance = formatEther(data?.data, 3);
 
   return (
     <div className="flex gap-2">

@@ -1,7 +1,5 @@
 import { CHAINS, SupportedChains } from "@/config/constants";
-
-import Ethereum from "~icons/logos/ethereum";
-import Matic from "~icons/token-branded/matic";
+import { Ethereum, Matic } from "@/config/icons";
 
 const ChainLogo = {
   [CHAINS.ethereum.name.toLowerCase()]: <Ethereum />,

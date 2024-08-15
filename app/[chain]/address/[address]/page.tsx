@@ -2,24 +2,23 @@
 
 import { useState } from "react";
 import CopyButton from "@/components/CopyButton";
-import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import fetcher from "@/utils/fetcher";
 import { PaginationSort, type Transaction } from "@/config/types";
 import useSWR from "swr";
 import TimeAgo from "@/components/TimeAgo";
-import { format } from "@/utils/ether";
+import { formatEther } from "@/utils/ether";
 import { CHAINS, type SupportedChains } from "@/config/constants";
-import UilArrowDown from "~icons/uil/arrow-down";
+import { BxChevronLeft, UilArrowDown } from "@/config/icons";
 import AddressBalance from "@/components/AddressBalance";
 import { Address } from "viem";
+import { getTransactionsFetchUrl } from "@/utils/api";
 
 const initialSort = PaginationSort.DESC;
 
 export default function AddressPage({ params: { address, chain } }: { params: { address: Address; chain: SupportedChains } }) {
-  const [sortByTampStamp, setSortByTampStamp] = useState<PaginationSort | null>(initialSort);
-  const [sortByValue, setSortByValue] = useState<PaginationSort | null>(null);
+  const [sortByTampStamp, setSortByTampStamp] = useState<PaginationSort | undefined>(initialSort);
+  const [sortByValue, setSortByValue] = useState<PaginationSort | undefined>(undefined);
 
   const setSortingByTimeStamp = () => {
     if (sortByTampStamp === PaginationSort.DESC) {
@@ -27,7 +26,7 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
     } else {
       setSortByTampStamp(PaginationSort.DESC);
     }
-    setSortByValue(null);
+    setSortByValue(undefined);
   };
   const setSortingByValue = () => {
     if (sortByValue === PaginationSort.DESC) {
@@ -35,12 +34,10 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
     } else {
       setSortByValue(PaginationSort.DESC);
     }
-    setSortByTampStamp(null);
+    setSortByTampStamp(undefined);
   };
 
-  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}&chain=${chain}&sort=${sortByTampStamp}`, fetcher<{ data: Transaction[] }>, {
-    refreshInterval: 3000,
-  });
+  const { data, isLoading, error } = useSWR<{ data: Transaction[] }>(getTransactionsFetchUrl({ address, chain, sort: sortByTampStamp }));
 
   if (isLoading) {
     // TODO: Add loader
@@ -74,9 +71,13 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
             <Logo chain={chain} />
           </Link>
         </div>
-        <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
-          <span className="mr-2 opacity-50">Address:</span> <span className="font-mono">{address}</span>
-          <CopyButton copy={address} />
+        <div className="flex w-full flex-col justify-center pb-6 pt-8 text-center font-bold lg:static lg:w-auto lg:flex-row lg:rounded-xl lg:p-4">
+          <span className="mr-2 opacity-50">Address:</span>
+          <br className="md:hidden" />
+          <span className="font-mono text-xs lg:text-sm">{address}</span>
+          <span className="mt-2 inline-block lg:mt-0">
+            <CopyButton copy={address} />
+          </span>
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <AddressBalance address={address} chain={chain} />
@@ -85,15 +86,15 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
 
       <div className="mt-10 w-full lg:max-w-4xl">
         <div className="w-full rounded-md border border-white/10 text-sm">
-          <div className="flex border-b border-b-white/10">
-            <div className="w-8/12 p-3 text-left opacity-40">Hash</div>
-            <div className="w-2/12 p-3 text-left">
+          <div className="flex flex-row border-b border-b-white/10">
+            <div className="hidden w-8/12 p-3 text-left opacity-40 md:block">Hash</div>
+            <div className="p-3 text-left lg:w-2/12">
               <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByTimeStamp}>
                 Timestamp
                 {sortByTampStamp && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByTampStamp === PaginationSort.ASC && "rotate-180"}`} />}
               </button>
             </div>
-            <div className="w-2/12 p-3 text-left">
+            <div className="p-3 text-left lg:w-2/12">
               <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByValue}>
                 Amount
                 {sortByValue && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByValue === PaginationSort.ASC && "rotate-180"}`} />}
@@ -102,17 +103,20 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
           </div>
 
           {transactions?.map((tx) => (
-            <div key={tx.hash} className="flex border-b border-b-white/10 text-xs transition-colors hover:bg-black/5 hover:dark:bg-white/10">
-              <div className="w-8/12 p-3 text-left font-mono">
-                <Link className="text-primary" href={{ pathname: `./tx/${tx.hash}`, query: { tx: JSON.stringify(tx) } }}>
+            <div key={tx.hash} className="flex flex-col border-b border-b-white/10 py-2 text-xs transition-colors hover:bg-white/5 lg:flex-row lg:py-0">
+              <div className="break-words px-3 py-1 text-left font-mono lg:w-8/12 lg:px-3 lg:py-3">
+                <span className="mr-2 opacity-40">Hash:</span>
+                <Link className="text-primary" href={`./tx/${tx.hash}`}>
                   {tx.hash}
                 </Link>
               </div>
-              <div className="w-2/12 p-3 text-left">
+              <div className="px-3 py-1 text-left lg:w-2/12 lg:px-3 lg:py-3">
+                <span className="mr-2 opacity-40">Timestamp:</span>
                 <TimeAgo timeStamp={tx.timeStamp} />
               </div>
-              <div className="w-2/12 p-3 text-left font-mono">
-                {format(tx.value)} {CHAINS[chain].nativeCurrency.symbol}
+              <div className="px-3 py-1 text-left font-mono lg:w-2/12 lg:px-3 lg:py-3">
+                <span className="mr-2 opacity-40">Amount:</span>
+                {formatEther(tx.value)} {CHAINS[chain].nativeCurrency.symbol}
               </div>
             </div>
           ))}

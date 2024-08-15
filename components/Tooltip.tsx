@@ -1,4 +1,4 @@
-import UilQuestionCircle from "~icons/uil/question-circle";
+import { UilQuestionCircle } from "@/config/icons";
 
 export default function Tooltip({ text, children }: { text: string; children?: React.ReactNode }) {
   return (

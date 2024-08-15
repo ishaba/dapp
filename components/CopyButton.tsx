@@ -1,9 +1,7 @@
 "use client";
 
+import { UilCheck, UilCopy } from "@/config/icons";
 import { useEffect, useState } from "react";
-
-import UilCheck from "~icons/uil/check";
-import UilCopy from "~icons/uil/copy";
 
 const copyInitial = "Copy Address";
 const copySuccess = "Copied!";

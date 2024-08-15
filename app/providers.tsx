@@ -1,10 +1,11 @@
 "use client";
 
+import { SWRConfig } from "swr";
+import { usePathname } from "next/navigation";
+import fetcher from "@/utils/fetcher";
 import { CHAIN_COLORS, type SupportedChains } from "@/config/constants";
 
-import { usePathname } from "next/navigation";
-
-export default function ChainProvider({
+export default function Providers({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -18,5 +19,14 @@ export default function ChainProvider({
 
   const style = { "--color-primary": currentChainColor ? currentChainColor[1] : "white" } as React.CSSProperties;
 
-  return <div style={style}>{children}</div>;
+  return (
+    <SWRConfig
+      value={{
+        refreshInterval: 3000,
+        fetcher,
+      }}
+    >
+      <div style={style}>{children}</div>
+    </SWRConfig>
+  );
 }

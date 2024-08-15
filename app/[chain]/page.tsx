@@ -4,10 +4,7 @@ import { useRouter } from "next/navigation";
 import { SUPPORTED_CHAINS, type SupportedChains } from "@/config/constants";
 import Logo from "@/components/Logo";
 import Link from "next/link";
-import NextLogo from "~icons/logos/nextjs.jsx";
-import UilSearch from "~icons/uil/search";
-import UilSun from "~icons/uil/sun";
-import VercelLogo from "~icons/logos/vercel.jsx";
+import { NextLogo, UilSearch, UilSun, VercelLogo } from "@/config/icons";
 
 const recentlyViewed = {
   [SUPPORTED_CHAINS[0]]: ["0xa83114a443da1cecefc50368531cace9f37fcccb"],

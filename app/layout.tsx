@@ -1,8 +1,8 @@
 import "./globals.css";
 
-import ChainProvider from "./ChainProvider";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
+import Providers from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ChainProvider>{children}</ChainProvider>
+        <Providers>{children}</Providers>
         <div className="p-4 text-center text-xs opacity-50">&copy; 2024 Transactions Explorer</div>
       </body>
     </html>
