@@ -17,7 +17,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 [✓] – Add fetch transactions list
 [✓] – Add chain based pages
 [✓] – Finish fetch transactions list
-[ ] – Add transactions table sorting
+[✓] – Add transactions table sorting
 [ ] – Add fetch transaction details
 [ ] – Add fetch balance
 [ ] – Style transaction confirmation status

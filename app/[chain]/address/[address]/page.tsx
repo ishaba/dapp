@@ -6,23 +6,39 @@ import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import UilTransaction from "~icons/uil/transaction";
 import fetcher from "@/utils/fetcher";
-import { type Transaction } from "@/config/types";
+import { PaginationSort, type Transaction } from "@/config/types";
 import useSWR from "swr";
 import TimeAgo from "@/components/TimeAgo";
 import { format } from "@/utils/ether";
 import { CHAINS, type SupportedChains } from "@/config/constants";
 import UilArrowDown from "~icons/uil/arrow-down";
-import UilArrowUp from "~icons/uil/arrow-up";
 
-var rf = new Intl.RelativeTimeFormat("en-US");
+const initialSort = PaginationSort.DESC;
 
 export default function AddressPage({ params: { address, chain } }: { params: { address: string; chain: SupportedChains } }) {
-  const [sort, setSort] = useState();
+  const [sortByTampStamp, setSortByTampStamp] = useState<PaginationSort | null>(initialSort);
+  const [sortByValue, setSortByValue] = useState<PaginationSort | null>(null);
+
   const balance = 0;
 
-  const changeSort = () => {};
+  const setSortingByTimeStamp = () => {
+    if (sortByTampStamp === PaginationSort.DESC) {
+      setSortByTampStamp(PaginationSort.ASC);
+    } else {
+      setSortByTampStamp(PaginationSort.DESC);
+    }
+    setSortByValue(null);
+  };
+  const setSortingByValue = () => {
+    if (sortByValue === PaginationSort.DESC) {
+      setSortByValue(PaginationSort.ASC);
+    } else {
+      setSortByValue(PaginationSort.DESC);
+    }
+    setSortByTampStamp(null);
+  };
 
-  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}`, fetcher<{ data: Transaction[] }>, {
+  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}&sort=${sortByTampStamp}`, fetcher<{ data: Transaction[] }>, {
     refreshInterval: 3000,
   });
 
@@ -33,6 +49,21 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
   if (error) {
     // TODO: Add error handler
   }
+
+  // NOTE: ehterscan api doesn't support sort by value
+  // since we don't need to implement pagination
+  // it is not a big problem we just can sort data array localy
+  function sortTransaction(data: Transaction[] | undefined) {
+    if (sortByValue && data) {
+      const sorter = sortByValue === PaginationSort.DESC ? -1 : 1;
+      return [...data].sort((a, b) => (a.value < b.value ? 1 * sorter : a.value > b.value ? -1 * sorter : 0));
+    }
+    return data;
+  }
+
+  // TODO: Something strange happened here
+  // Refactor this should be just data
+  const transactions = sortTransaction(data?.data);
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6 lg:-mb-20 lg:p-24">
@@ -59,18 +90,20 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
           <div className="flex border-b border-b-white/10">
             <div className="w-8/12 p-3 text-left opacity-40">Hash</div>
             <div className="w-2/12 p-3 text-left">
-              <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={changeSort}>
-                Timestamp <UilArrowDown className="inline-block" />
+              <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByTimeStamp}>
+                Timestamp
+                {sortByTampStamp && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByTampStamp === PaginationSort.ASC && "rotate-180"}`} />}
               </button>
             </div>
             <div className="w-2/12 p-3 text-left">
-              <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={changeSort}>
-                Amount <UilArrowUp className="inline-block opacity-0" />
+              <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByValue}>
+                Amount
+                {sortByValue && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByValue === PaginationSort.ASC && "rotate-180"}`} />}
               </button>
             </div>
           </div>
-          {/* TODO: Refactor this should be just data */}
-          {data?.data?.map(({ hash, timeStamp, value }) => (
+
+          {transactions?.map(({ hash, timeStamp, value }) => (
             <div key={hash} className="flex border-b border-b-white/10 transition-colors hover:bg-black/5 hover:dark:bg-white/10">
               <div className="w-8/12 p-3 text-left font-mono">
                 <Link className="text-primary" href={`../../tx/${hash}`}>

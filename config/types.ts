@@ -1,3 +1,14 @@
+export enum PaginationSort {
+  ASC = "asc",
+  DESC = "desc",
+}
+
+export type Pagination = {
+  page: number;
+  offset: number;
+  sort: PaginationSort;
+};
+
 export type Transaction = {
   blockHash: string;
   blockNumber: string;
