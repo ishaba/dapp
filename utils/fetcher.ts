@@ -1,4 +1,5 @@
-// @ts-expect-error
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
-export default fetcher;
+export default async function fetcher<T = any>(input: RequestInfo, init?: RequestInit): Promise<T> {
+  const response = await fetch(input, init);
+  const result = response.json();
+  return result;
+}

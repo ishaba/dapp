@@ -1,7 +1,9 @@
-import type { NextApiResponse } from "next";
+import { type NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { type Transaction } from "@/config/types";
 
+// TODO: use SUPPORTED_CHAINS from config here and get apiUrls from viem
 const API_URLS = {
   "1": "https://api.etherscan.io/api",
   "137": "https://api.polygonscan.io/api",
@@ -20,7 +22,8 @@ const getApiUrl = (chainID: SuportedChainIDs) => API_URLS[chainID] || Object.val
 const ActiveChainID = "1";
 const getActiveChainID = (): SuportedChainIDs => ActiveChainID;
 
-const getTransactionsUrl = (address: string, chainID: SuportedChainIDs) => `${getApiUrl(chainID)}?apikey=${getApiKey(chainID)}&module=account&address=${address}&action=txlist`;
+const getTransactionsUrl = (address: string, chainID: SuportedChainIDs, page: number, offset: number) =>
+  `${getApiUrl(chainID)}?apikey=${getApiKey(chainID)}&module=account&address=${address}&action=txlist&page=${page}&offset=${offset}&sort=desc`;
 
 type Response = {
   data?: Record<string, string>;
@@ -32,7 +35,7 @@ type ResponseError = {
 };
 
 type ResponseData = {
-  data: Record<string, string>;
+  data: Transaction;
 };
 
 type ApiResponse = (Omit<Response, "error"> & ResponseError) | (Omit<Response, "data"> & ResponseData);
@@ -48,7 +51,9 @@ export async function GET(req: NextRequest, res: NextApiResponse<ApiResponse>) {
     return NextResponse.json({ error: "mising address for transactions fetch", status: 500 });
   }
 
-  const transactionsUrl = getTransactionsUrl(address, chainID);
+  const page = 1;
+  const offset = 100;
+  const transactionsUrl = getTransactionsUrl(address, chainID, page, offset);
 
   try {
     const data = await fetch(transactionsUrl, {
@@ -56,7 +61,8 @@ export async function GET(req: NextRequest, res: NextApiResponse<ApiResponse>) {
         "Content-Type": "application/json",
       },
     }).then((res) => res.json());
-    return NextResponse.json({ data, status: 200 });
+    console.log("data.result", data.result.length);
+    return NextResponse.json({ data: data.result, status: 200 });
   } catch (err) {
     return NextResponse.json({ error: "failed to load data", status: 500 });
   }

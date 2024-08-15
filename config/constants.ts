@@ -10,6 +10,11 @@ export const DEFAULT_CHAIN = SUPPORTED_CHAINS[0];
 
 export type SupportedChains = (typeof SUPPORTED_CHAINS)[number];
 
+export const CHAINS = {
+  [toLowerCaseTyped(mainnet.name)]: mainnet,
+  [toLowerCaseTyped(polygon.name)]: polygon,
+};
+
 export const CHAIN_COLORS: Record<SupportedChains, string> = {
   [toLowerCaseTyped(mainnet.name)]: "#0784c3",
   [toLowerCaseTyped(polygon.name)]: "#7342dc",

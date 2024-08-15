@@ -18,6 +18,6 @@ const config: Config = {
     },
   },
   plugins: [],
-  safelist: ["text-ethereum", "text-polygon"],
+  safelist: ["text-ethereum", "hover:text-ethereum", "hover:text-polygon", "text-polygon"],
 };
 export default config;

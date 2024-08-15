@@ -1,6 +1,7 @@
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import UilTransaction from "~icons/uil/transaction";
+import { type SupportedChains } from "@/config/constants";
 
 const transaction = {
   hash: "0x610f2aee99ac008541ed9fe37ff1205a408074547c6eb7b7667f73d5ab8d987b",
@@ -15,17 +16,18 @@ const transaction = {
   price: "1.47119172 Gwei (0.00000000147119172 ETH)",
 };
 
-export default async function TxPage() {
+export default async function TxPage({ params: { hash, chain } }: { params: { hash: string; chain: SupportedChains } }) {
   return (
     <main className="flex min-h-screen flex-col items-center p-6 lg:-mb-20 lg:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <div className="flex w-full pb-6 pt-8 font-bold lg:static lg:w-auto lg:justify-center lg:rounded-xl lg:p-4">
-          <Link href="/" className="group relative flex hover:text-sky-400">
-            <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-40 group-hover:duration-200" />
+          <Link href={`/${chain}`} className="group relative flex hover:text-primary">
+            <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-80 group-hover:duration-200" />
             <UilTransaction className="mr-2" />
-            Transactions Explorer
+            <span className="mr-2 capitalize">{chain}</span> Transactions Explorer
           </Link>
         </div>
+        <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4"></div>
         <div className="flex w-full pb-6 pt-8 font-bold lg:static lg:w-auto lg:justify-center lg:rounded-xl lg:p-4">
           <div>Transaction Details</div>
         </div>
@@ -51,7 +53,7 @@ export default async function TxPage() {
           <div className="flex flex-col lg:flex-row">
             <div className="w-3/12">From:</div>
             <div className="w-6/12 break-words">
-              <Link className="text-sky-400" href={`/address/${transaction.from}`}>
+              <Link className="text-primary" href={`../../address/${transaction.from}`}>
                 {transaction.from}
               </Link>
             </div>
@@ -59,7 +61,7 @@ export default async function TxPage() {
           <div className="flex flex-col lg:flex-row">
             <div className="w-3/12">To:</div>
             <div className="w-6/12 break-words">
-              <Link className="text-sky-400" href={`/address/${transaction.to}`}>
+              <Link className="text-primary" href={`../../address/${transaction.to}`}>
                 {transaction.to}
               </Link>
             </div>

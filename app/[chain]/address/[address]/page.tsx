@@ -1,35 +1,47 @@
 "use client";
 
+import { useState } from "react";
 import AddressEntry from "@/components/AddressEntry";
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import UilTransaction from "~icons/uil/transaction";
 import fetcher from "@/utils/fetcher";
+import { type Transaction } from "@/config/types";
 import useSWR from "swr";
+import TimeAgo from "@/components/TimeAgo";
+import { format } from "@/utils/ether";
+import { CHAINS, type SupportedChains } from "@/config/constants";
+import UilArrowDown from "~icons/uil/arrow-down";
+import UilArrowUp from "~icons/uil/arrow-up";
 
-const transactions = [
-  {
-    hash: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
-    timeStamp: "1 min ago",
-    amount: "0.0001",
-  },
-];
+var rf = new Intl.RelativeTimeFormat("en-US");
 
-export default function AddressPage({ params: { address } }: { params: { address: string } }) {
+export default function AddressPage({ params: { address, chain } }: { params: { address: string; chain: SupportedChains } }) {
+  const [sort, setSort] = useState();
   const balance = 0;
 
-  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}`, fetcher);
+  const changeSort = () => {};
 
-  console.log(data, isLoading, error);
+  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}`, fetcher<{ data: Transaction[] }>, {
+    refreshInterval: 3000,
+  });
+
+  if (isLoading) {
+    // TODO: Add loader
+  }
+
+  if (error) {
+    // TODO: Add error handler
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6 lg:-mb-20 lg:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
-          <Link href="/" className="group relative flex hover:text-sky-400">
-            <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-40 group-hover:duration-200" />
+          <Link href={`/${chain}`} className="group relative flex hover:text-primary">
+            <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-80 group-hover:duration-200" />
             <UilTransaction className="mr-2" />
-            Transactions Explorer
+            <span className="mr-2 capitalize">{chain}</span> Transactions Explorer
           </Link>
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
@@ -42,29 +54,38 @@ export default function AddressPage({ params: { address } }: { params: { address
         </div>
       </div>
 
-      <div className="mt-10 w-full lg:max-w-3xl">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-b-white/10">
-              <th className="p-2 text-left opacity-40">Hash</th>
-              <th className="p-2 text-center opacity-40">Timestamp</th>
-              <th className="p-2 text-right opacity-40">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.map(({ hash, timeStamp, amount }) => (
-              <tr key={hash} className="border-b border-b-white/10 transition-colors hover:bg-black/5 hover:dark:bg-white/5">
-                <td className="p-2 text-left">
-                  <Link className="text-sky-400" href={`/tx/${hash}`}>
-                    {hash}
-                  </Link>
-                </td>
-                <td className="p-2 text-center">{timeStamp}</td>
-                <td className="p-2 text-right">{amount}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="mt-10 w-full lg:max-w-4xl">
+        <div className="w-full rounded-md border border-white/10 text-sm">
+          <div className="flex border-b border-b-white/10">
+            <div className="w-8/12 p-3 text-left opacity-40">Hash</div>
+            <div className="w-2/12 p-3 text-center">
+              <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={changeSort}>
+                Timestamp <UilArrowDown className="inline-block" />
+              </button>
+            </div>
+            <div className="w-2/12 p-3 text-right">
+              <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={changeSort}>
+                Amount <UilArrowUp className="inline-block opacity-0" />
+              </button>
+            </div>
+          </div>
+          {/* TODO: Refactor this should be just data */}
+          {data?.data?.map(({ hash, timeStamp, value }) => (
+            <div key={hash} className="flex border-b border-b-white/10 transition-colors hover:bg-black/5 hover:dark:bg-white/10">
+              <div className="w-8/12 p-3 text-left">
+                <Link className="text-primary" href={`../../tx/${hash}`}>
+                  {hash}
+                </Link>
+              </div>
+              <div className="w-2/12 p-3 text-center">
+                <TimeAgo timeStamp={timeStamp} />
+              </div>
+              <div className="w-2/12 p-3 text-right">
+                {format(value)} {CHAINS[chain].nativeCurrency.symbol}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );
