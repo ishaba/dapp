@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AddressEntry from "@/components/AddressEntry";
+import CopyButton from "@/components/CopyButton";
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import Logo from "@/components/Logo";
@@ -75,7 +75,8 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
           </Link>
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
-          <AddressEntry address={address} />
+          <span className="mr-2 opacity-50">Address:</span> <span className="font-mono">{address}</span>
+          <CopyButton copy={address} />
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <AddressBalance address={address} chain={chain} />

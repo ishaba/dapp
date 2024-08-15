@@ -1,7 +1,10 @@
+import CopyButton from "@/components/CopyButton";
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import Tooltip from "@/components/Tooltip";
 import { type SupportedChains } from "@/config/constants";
+import LightningIcon from "~icons/iconamoon/lightning-1";
 
 const transaction = {
   hash: "0x610f2aee99ac008541ed9fe37ff1205a408074547c6eb7b7667f73d5ab8d987b",
@@ -32,47 +35,92 @@ export default async function TxPage({ params: { hash, chain } }: { params: { ha
         </div>
       </div>
 
-      <div className="mt-10 w-full lg:max-w-5xl lg:p-4">
+      <div className="mt-10 w-full rounded-md border border-white/15 text-sm lg:max-w-5xl lg:p-2">
         <div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">Transaction Hash:</div> <div className="w-6/12 break-words">{transaction.hash}</div>
-          </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">Status:</div> <div className="w-6/12">{transaction.status}</div>
-          </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">Block:</div> <div className="w-6/12">{transaction.block}</div>
-          </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">Timestamp:</div> <div className="w-6/12">{transaction.timestamp}</div>
-          </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">Transaction Action:</div> <div className="w-6/12 break-words">{transaction.action}</div>
-          </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">From:</div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="A TxHash or transaction hash is a unique 66-character identifier that is generated whenever a transaction is executed." />
+              Transaction Hash:
+            </div>{" "}
             <div className="w-6/12 break-words">
+              {transaction.hash}
+              <CopyButton copy={transaction.hash} />
+            </div>
+          </div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="The status of the transaction." />
+              Status:
+            </div>
+            <div className="w-6/12">{transaction.status}</div>
+          </div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="Number of the block in which the transaction is recorded. Block confirmations indicate how many blocks have been added since the transaction was produced." />
+              Block:
+            </div>
+            <div className="w-6/12">{transaction.block}</div>
+          </div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="The date and time at which a transaction is produced." />
+              Timestamp:
+            </div>
+            <div className="w-6/12">{transaction.timestamp}</div>
+          </div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="Highlighted events of the transaction.">
+                <LightningIcon className="text-primary" />
+              </Tooltip>
+              Transaction Action:
+            </div>
+            <div className="w-6/12 break-words">{transaction.action}</div>
+          </div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="The sending party of the transaction." />
+              From:
+            </div>
+            <div className="w-6/12 break-words font-mono">
               <Link className="text-primary" href={`../../address/${transaction.from}`}>
                 {transaction.from}
               </Link>
+              <CopyButton copy={transaction.from} />
             </div>
           </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">To:</div>
-            <div className="w-6/12 break-words">
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="The receiving party of the transaction (could be a contract address)." />
+              To:
+            </div>
+            <div className="w-6/12 break-words font-mono">
               <Link className="text-primary" href={`../../address/${transaction.to}`}>
                 {transaction.to}
               </Link>
+              <CopyButton copy={transaction.to} />
             </div>
           </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">Value:</div> <div className="w-6/12">{transaction.value}</div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="The value being transacted in Ether and fiat value. Note: You can click the fiat value (if available) to see historical value at the time of transaction." />
+              Value:
+            </div>
+            <div className="w-6/12">{transaction.value}</div>
           </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">Transaction Fee:</div> <div className="w-6/12">{transaction.fee}</div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="Amount paid to process the transaction in Ether and fiat value." />
+              Transaction Fee:
+            </div>
+            <div className="w-6/12">{transaction.fee}</div>
           </div>
-          <div className="flex flex-col lg:flex-row">
-            <div className="w-3/12">Gas Price:</div> <div className="w-6/12">{transaction.price}</div>
+          <div className="flex flex-col p-3 lg:flex-row">
+            <div className="w-3/12 text-white/60">
+              <Tooltip text="Cost per unit of gas spent for the transaction, in Ether and Gwei." />
+              Gas Price:
+            </div>
+            <div className="w-6/12">{transaction.price}</div>
           </div>
         </div>
       </div>
