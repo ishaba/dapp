@@ -59,10 +59,10 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
       {isLoading && <LoaderTxDetails />}
 
       {!isLoading && (
-        <div className="mt-10 w-full rounded-md border border-white/15 text-sm lg:max-w-5xl lg:p-2">
+        <div className="mt-10 w-full rounded-md border border-black/15 text-sm dark:border-white/15 lg:max-w-5xl lg:p-2">
           <div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="A TxHash or transaction hash is a unique 66-character identifier that is generated whenever a transaction is executed." />
                 Transaction Hash:
               </div>
@@ -77,7 +77,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               </div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="The status of the transaction." />
                 Status:
               </div>
@@ -94,7 +94,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               </div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="Number of the block in which the transaction is recorded. Block confirmations indicate how many blocks have been added since the transaction was produced." />
                 Block:
               </div>
@@ -104,14 +104,14 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               </div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="The date and time at which a transaction is produced." />
                 Timestamp:
               </div>
               <div className="lg:w-6/12">{tx?.timeStamp && <TimeAgo timeStamp={tx?.timeStamp} />}</div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="Highlighted events of the transaction.">
                   <LightningIcon className="text-primary" />
                 </Tooltip>
@@ -120,7 +120,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               <div className="break-words lg:w-6/12"></div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="The sending party of the transaction." />
                 From:
               </div>
@@ -132,7 +132,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               </div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="The receiving party of the transaction (could be a contract address)." />
                 To:
               </div>
@@ -144,7 +144,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               </div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="The value being transacted in Ether and fiat value. Note: You can click the fiat value (if available) to see historical value at the time of transaction." />
                 Value:
               </div>
@@ -153,7 +153,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               </div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="Amount paid to process the transaction in Ether and fiat value." />
                 Transaction Fee:
               </div>
@@ -162,7 +162,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               </div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
-              <div className="pb-2 text-white/60 lg:w-3/12 lg:pb-0">
+              <div className="pb-2 text-black/60 dark:text-white/60 lg:w-3/12 lg:pb-0">
                 <Tooltip text="Cost per unit of gas spent for the transaction, in Ether and Gwei." />
                 Gas Price:
               </div>

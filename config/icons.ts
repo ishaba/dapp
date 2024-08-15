@@ -10,9 +10,30 @@ import TokenMatic from "~icons/cryptocurrency-color/matic";
 import UilArrowDown from "~icons/uil/arrow-down";
 import UilCheck from "~icons/uil/check";
 import UilCopy from "~icons/uil/copy";
+import UilMoon from "~icons/uil/moon";
 import UilQuestionCircle from "~icons/uil/question-circle";
 import UilSearch from "~icons/uil/search";
+import UilSetting from "~icons/uil/setting";
 import UilSun from "~icons/uil/sun";
 import VercelLogo from "~icons/logos/vercel.jsx";
 
-export { BxChevronLeft, Ethereum, LightningIcon, Matic, NextLogo, StatusFailIcon, StatusSuccessIcon, TokenEth, TokenMatic, UilArrowDown, UilCheck, UilCopy, UilQuestionCircle, UilSearch, UilSun, VercelLogo };
+export {
+  BxChevronLeft,
+  Ethereum,
+  LightningIcon,
+  Matic,
+  NextLogo,
+  StatusFailIcon,
+  StatusSuccessIcon,
+  TokenEth,
+  TokenMatic,
+  UilArrowDown,
+  UilCheck,
+  UilCopy,
+  UilQuestionCircle,
+  UilSearch,
+  UilSetting,
+  UilSun,
+  UilMoon,
+  VercelLogo,
+};

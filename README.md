@@ -30,11 +30,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 [✓] – Check mobile
 [ ] – Check 4k
-[ ] – Check light theme
+[✓] – Check light theme
 [✓] – Check requirements
 
 Nice to have:
 
 [ ] – Add recent searches
-[ ] – Add dark/light theme toggler
+[✓] – Add dark/light theme toggler
 [ ] – Prepare some tests

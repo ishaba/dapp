@@ -28,9 +28,9 @@ export default function CopyButton({ copy }: { copy?: string }) {
       <div className="absolute -left-2 -top-2 h-8 w-8"></div>
       <div className="absolute -right-10 top-7 hidden w-[102px] text-center group-hover:block">
         <div className="absolute -top-[11px] left-1/2 inline-block h-3 w-5 -translate-x-2 overflow-hidden">
-          <div className="h-3 w-3 origin-bottom-left rotate-45 transform border border-white/20 bg-black"></div>
+          <div className="h-3 w-3 origin-bottom-left rotate-45 transform border border-black/20 bg-white dark:border-white/20 dark:bg-black"></div>
         </div>
-        <div className="inline-block rounded-md border border-white/20 bg-black px-1.5 py-1 text-xs">{copyText}</div>
+        <div className="inline-block rounded-md border border-black/20 bg-white px-1.5 py-1 text-xs text-black dark:border-white/20 dark:bg-black dark:text-white">{copyText}</div>
       </div>
     </button>
   );

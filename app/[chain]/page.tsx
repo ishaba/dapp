@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { SUPPORTED_CHAINS, type SupportedChains } from "@/config/constants";
 import Logo from "@/components/Logo";
 import Link from "next/link";
-import { NextLogo, UilSearch, UilSun, VercelLogo } from "@/config/icons";
+import { NextLogo, UilSearch, VercelLogo } from "@/config/icons";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 const recentlyViewed = {
   [SUPPORTED_CHAINS[0]]: ["0xa83114a443da1cecefc50368531cace9f37fcccb"],
@@ -63,25 +64,23 @@ export default function ChainPage({ params: { chain } }: { params: { chain: Supp
               Go to {explorerSwicher} explorer
             </Link>
           </div>
-          <button className="ml-4 rounded-lg border border-white/60 px-1 py-1 opacity-75 transition-all duration-200 ease-in hover:bg-white/20 hover:opacity-100" title="Sorry! Theme switcher not implemented 😔">
-            <UilSun />
-          </button>
+          <ThemeSwitcher />
         </div>
       </div>
 
       <div className="relative w-full lg:max-w-5xl">
         <div className="absolute left-1/2 z-[-1] flex place-items-center opacity-30 before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]"></div>
         <form onSubmit={searchFormSubmit} className="relative flex justify-center">
-          <input name="address" className="mr-2 w-full rounded-lg px-3 py-2 text-black lg:w-1/2" type="text" placeholder="Search transactions by address" />
-          <button className="group rounded-lg border-2 border-gray-300/20 px-3 py-2.5 hover:bg-black/20 active:scale-95 hover:dark:bg-white/20" type="submit" title="Get Transtions List">
+          <input name="address" className="mr-2 w-full rounded-lg bg-slate-200/75 px-3 py-2 text-black dark:bg-white lg:w-1/2" type="text" placeholder="Search transactions by address" />
+          <button className="group rounded-lg border-2 border-gray-300/40 px-3 py-2.5 hover:bg-black/20 active:scale-95 dark:border-gray-300/20 hover:dark:bg-white/20" type="submit" title="Get Transtions List">
             <UilSearch width="20" height="20" className="transition-transform ease-in group-hover:scale-110" />
           </button>
         </form>
       </div>
 
       <div className="mb-32 lg:w-full lg:max-w-5xl">
-        <div className="mb-4 text-xs opacity-60 lg:w-full lg:text-left">Recently viewed:</div>
-        <div className="text-center text-xs lg:mb-0 lg:w-full lg:text-left">
+        <div className="mb-4 text-center text-xs opacity-60 lg:w-full">Recently viewed:</div>
+        <div className="text-center text-xs lg:mb-0 lg:w-full">
           {recentlyViewed[chain].map((address) => (
             <Link key={address} href={`./address/${address}`} className="group border-b border-transparent text-primary transition-colors hover:underline">
               {address}
@@ -93,15 +92,15 @@ export default function ChainPage({ params: { chain } }: { params: { chain: Supp
       <div className="flex gap-10">
         <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" className="group text-[10px] transition-transform duration-300 ease-out hover:scale-105">
           <span className="opacity-50 transition-opacity duration-500 ease-out group-hover:opacity-100">Powered by</span>
-          <div className="mt-2">
-            <NextLogo width={60} fill="white" />
+          <div className="mt-2 text-black dark:invert">
+            <NextLogo width={60} fill="currentColo" />
           </div>
         </a>
 
         <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="group text-[10px] transition-transform duration-300 ease-out hover:scale-105">
           <span className="opacity-50 transition-opacity duration-500 ease-out group-hover:opacity-100">Hosted by</span>
-          <div className="mt-2">
-            <VercelLogo width={70} fill="white" />
+          <div className="mt-2 text-black dark:invert">
+            <VercelLogo width={70} fill="currentColo" />
           </div>
         </a>
       </div>

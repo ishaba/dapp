@@ -3,6 +3,7 @@
 import { SWRConfig } from "swr";
 import { usePathname } from "next/navigation";
 import fetcher from "@/utils/fetcher";
+import { ThemeProvider } from "@/components/ThemeSwitcher";
 import { CHAIN_COLORS, type SupportedChains } from "@/config/constants";
 
 export default function Providers({
@@ -26,7 +27,9 @@ export default function Providers({
         fetcher,
       }}
     >
-      <div style={style}>{children}</div>
+      <ThemeProvider enableSystem defaultTheme="system" attribute="class">
+        <div style={style}>{children}</div>
+      </ThemeProvider>
     </SWRConfig>
   );
 }

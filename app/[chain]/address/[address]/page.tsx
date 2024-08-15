@@ -85,8 +85,8 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
 
       {!isLoading && (
         <div className="mt-10 w-full lg:max-w-4xl">
-          <div className="w-full rounded-md border border-white/10 text-sm">
-            <div className="flex flex-row border-b border-b-white/10">
+          <div className="w-full rounded-md border border-black/10 text-sm dark:border-white/10">
+            <div className="flex flex-row border-b border-b-black/10 dark:border-b-white/10">
               <div className="hidden w-8/12 p-3 text-left opacity-40 md:block">Hash</div>
               <div className="p-3 text-left lg:w-2/12">
                 <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByTimeStamp}>
@@ -103,19 +103,19 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
             </div>
 
             {transactions?.map((tx) => (
-              <div key={tx.hash} className="flex flex-col border-b border-b-white/10 py-2 text-xs transition-colors hover:bg-white/5 lg:flex-row lg:py-0">
+              <div key={tx.hash} className="flex flex-col border-b border-b-black/10 py-2 text-xs transition-colors hover:bg-black/5 dark:border-b-white/10 lg:flex-row lg:py-0">
                 <div className="break-words px-3 py-1 text-left font-mono lg:w-8/12 lg:px-3 lg:py-3">
-                  <span className="mr-2 opacity-40 md:hidden">Hash:</span>
+                  <span className="mr-2 opacity-40 lg:hidden">Hash:</span>
                   <Link className="text-primary" href={`./tx/${tx.hash}`}>
                     {tx.hash}
                   </Link>
                 </div>
                 <div className="px-3 py-1 text-left lg:w-2/12 lg:px-3 lg:py-3">
-                  <span className="mr-2 opacity-40 md:hidden">Timestamp:</span>
+                  <span className="mr-2 opacity-40 lg:hidden">Timestamp:</span>
                   <TimeAgo timeStamp={tx.timeStamp} />
                 </div>
                 <div className="px-3 py-1 text-left font-mono lg:w-2/12 lg:px-3 lg:py-3">
-                  <span className="mr-2 opacity-40 md:hidden">Amount:</span>
+                  <span className="mr-2 opacity-40 lg:hidden">Amount:</span>
                   {formatEther(tx.value)} {CHAINS[chain].nativeCurrency.symbol}
                 </div>
               </div>
