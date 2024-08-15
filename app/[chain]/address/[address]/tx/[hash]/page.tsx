@@ -11,7 +11,7 @@ import { type Transaction } from "@/config/types";
 import { Address, Hash } from "viem";
 import TimeAgo from "@/components/TimeAgo";
 import { formatEther, formatGasPrice, formatWeiToEth } from "@/utils/ether";
-import { getTransactionsFetchUrl } from "@/utils/api";
+import { getTransactionsFetchUrl, getTxStatusFetchUrl } from "@/utils/api";
 import { BxChevronLeft, LightningIcon, StatusFailIcon, StatusSuccessIcon } from "@/config/icons";
 
 type TxPageParams = { address: Address; hash: Hash; chain: SupportedChains };
@@ -35,6 +35,15 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
   if (error) {
     // TODO: Add error handler
   }
+
+  const tsStatus = useSWR(getTxStatusFetchUrl({ txhash: hash, chain }));
+
+  // looks like we don't need this request since it's response is the same as transactions.txreceipt_status ?
+  // check this
+  console.log("tsStatus", tsStatus);
+
+  const explorerName = CHAINS[chain].blockExplorers?.default.name;
+  const explorerLink = CHAINS[chain].blockExplorers?.default.url;
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6 lg:-mb-20 lg:p-24">
@@ -77,6 +86,11 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
               <div className="break-words font-mono lg:w-6/12">
                 {tx?.hash}
                 {tx?.hash && <CopyButton copy={tx?.hash} />}
+                <span className="mt-1 inline-block lg:ml-2 lg:mt-0">
+                  <a className="whitespace-nowrap text-xs text-primary hover:underline" href={`${explorerLink}/tx/${tx?.hash}`} target="_blank" rel="noopener noreferrer">
+                    View on {explorerName}
+                  </a>
+                </span>
               </div>
             </div>
             <div className="flex flex-col p-3 lg:flex-row">
@@ -128,7 +142,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
                 From:
               </div>
               <div className="break-words font-mono lg:w-6/12">
-                <Link className="text-primary" href={`../../../../address/${tx?.from}`}>
+                <Link className="text-primary hover:underline" href={`../../../../address/${tx?.from}`}>
                   {tx?.from}
                 </Link>
                 <CopyButton copy={tx?.from} />
@@ -140,7 +154,7 @@ export default function TxPage({ params: { address, hash, chain } }: { params: T
                 To:
               </div>
               <div className="break-words font-mono lg:w-6/12">
-                <Link className="text-primary" href={`../../../../address/${tx?.to}`}>
+                <Link className="text-primary hover:underline" href={`../../../../address/${tx?.to}`}>
                   {tx?.to}
                 </Link>
                 <CopyButton copy={tx?.to} />

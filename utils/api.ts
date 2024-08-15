@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, Hash } from "viem";
 import { PaginationSort } from "@/config/types";
 import { API_KEYS, API_URLS, type SupportedChains } from "@/config/constants";
 
@@ -26,6 +26,16 @@ export type TransactionsApiProps = {
 export const getTransactionsFetchUrl = ({ address, chain, page, offset, sort }: TransactionsApiProps) => {
   const query = new URLSearchParams(JSON.parse(JSON.stringify({ address, chain, page, offset, sort })));
   return `${BASE_URL}/api/transactions?${query.toString()}`;
+};
+
+export type TxStatusApiProps = {
+  txhash: Hash;
+  chain: SupportedChains;
+};
+
+export const getTxStatusFetchUrl = ({ txhash, chain }: TxStatusApiProps) => {
+  const query = new URLSearchParams({ txhash, chain });
+  return `${BASE_URL}/api/tx?${query.toString()}`;
 };
 
 export type BalanceApiProps = {

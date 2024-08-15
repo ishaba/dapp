@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 [✓] – Add fetch balance
 [✓] – Style transaction details page
 [✓] – Add polygon chain
-[ ] – Add transaction confirmation status
+[✓] – Add transaction confirmation status
 [ ] – Add errors handling
 [ ] – Add loading states
 [✓] – Add copy to clipboard

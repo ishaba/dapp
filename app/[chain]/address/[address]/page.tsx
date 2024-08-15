@@ -105,17 +105,17 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
           {transactions?.map((tx) => (
             <div key={tx.hash} className="flex flex-col border-b border-b-white/10 py-2 text-xs transition-colors hover:bg-white/5 lg:flex-row lg:py-0">
               <div className="break-words px-3 py-1 text-left font-mono lg:w-8/12 lg:px-3 lg:py-3">
-                <span className="mr-2 opacity-40">Hash:</span>
+                <span className="mr-2 opacity-40 md:hidden">Hash:</span>
                 <Link className="text-primary" href={`./tx/${tx.hash}`}>
                   {tx.hash}
                 </Link>
               </div>
               <div className="px-3 py-1 text-left lg:w-2/12 lg:px-3 lg:py-3">
-                <span className="mr-2 opacity-40">Timestamp:</span>
+                <span className="mr-2 opacity-40 md:hidden">Timestamp:</span>
                 <TimeAgo timeStamp={tx.timeStamp} />
               </div>
               <div className="px-3 py-1 text-left font-mono lg:w-2/12 lg:px-3 lg:py-3">
-                <span className="mr-2 opacity-40">Amount:</span>
+                <span className="mr-2 opacity-40 md:hidden">Amount:</span>
                 {formatEther(tx.value)} {CHAINS[chain].nativeCurrency.symbol}
               </div>
             </div>
