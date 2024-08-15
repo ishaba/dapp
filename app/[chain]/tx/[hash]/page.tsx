@@ -1,6 +1,6 @@
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
-import UilTransaction from "~icons/uil/transaction";
+import Logo from "@/components/Logo";
 import { type SupportedChains } from "@/config/constants";
 
 const transaction = {
@@ -23,8 +23,7 @@ export default async function TxPage({ params: { hash, chain } }: { params: { ha
         <div className="flex w-full pb-6 pt-8 font-bold lg:static lg:w-auto lg:justify-center lg:rounded-xl lg:p-4">
           <Link href={`/${chain}`} className="group relative flex hover:text-primary">
             <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-80 group-hover:duration-200" />
-            <UilTransaction className="mr-2" />
-            <span className="mr-2 capitalize">{chain}</span> Transactions Explorer
+            <Logo chain={chain} />
           </Link>
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4"></div>

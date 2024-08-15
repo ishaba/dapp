@@ -1,7 +1,17 @@
-import { mainnet, polygon, type Chain } from "viem/chains";
+import { mainnet, polygon } from "viem/chains";
 
 const toLowerCaseTyped = function <S extends string>(input: S) {
   return input.toLowerCase() as Lowercase<S>;
+};
+
+export const API_KEYS = {
+  [mainnet.id]: process.env.NEXT_PUBLIC_API_KEY_ETHERSCAN,
+  [polygon.id]: process.env.NEXT_PUBLIC_API_KEY_POLYGONSCAN,
+};
+
+export const API_URLS = {
+  [mainnet.id]: mainnet.blockExplorers?.default.apiUrl,
+  [polygon.id]: polygon.blockExplorers?.default.apiUrl,
 };
 
 export const SUPPORTED_CHAINS = [toLowerCaseTyped(mainnet.name), toLowerCaseTyped(polygon.name)] as const;
@@ -13,7 +23,13 @@ export const CHAINS = {
   [toLowerCaseTyped(polygon.name)]: polygon,
 };
 
+export const CHAIN_IDS = {
+  [toLowerCaseTyped(mainnet.name)]: mainnet.id,
+  [toLowerCaseTyped(polygon.name)]: polygon.id,
+};
+
 export type SupportedChains = (typeof SUPPORTED_CHAINS)[number];
+export type SupportedChainIDs = (typeof CHAIN_IDS)[SupportedChains];
 
 export const CHAIN_COLORS: Record<SupportedChains, string> = {
   [toLowerCaseTyped(mainnet.name)]: "#0784c3",

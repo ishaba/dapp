@@ -1,13 +1,11 @@
 import { type NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { PaginationSort, type Transaction, type Pagination } from "@/config/types";
 import { getApiKey, getApiUrl } from "@/utils/api";
 import { CHAIN_IDS, type SupportedChains, type SupportedChainIDs } from "@/config/constants";
 import { Address } from "viem";
 
-const getTransactionsUrl = (address: Address, chainID: SupportedChainIDs, pagination: Pagination) =>
-  `${getApiUrl(chainID)}?apikey=${getApiKey(chainID)}&module=account&address=${address}&action=txlist&page=${pagination.page}&offset=${pagination.offset}&sort=${pagination.sort}`;
+const getBalanceUrl = (address: Address, chainID: SupportedChainIDs) => `${getApiUrl(chainID)}?apikey=${getApiKey(chainID)}&module=account&address=${address}&action=balance`;
 
 type Response = {
   data?: Record<string, string>;
@@ -19,14 +17,10 @@ type ResponseError = {
 };
 
 type ResponseData = {
-  data: Transaction;
+  data: string;
 };
 
 type ApiResponse = (Omit<Response, "error"> & ResponseError) | (Omit<Response, "data"> & ResponseData);
-
-const defaultPage = 1;
-const defaultOffset = 100;
-const defaultSort = PaginationSort.DESC;
 
 export const dynamic = "force-dynamic";
 
@@ -37,19 +31,10 @@ export async function GET(req: NextRequest, res: NextApiResponse<ApiResponse>) {
   const chainID = CHAIN_IDS[chain];
 
   if (!address) {
-    return NextResponse.json({ error: "Mising address for transactions fetch", status: 500 });
+    return NextResponse.json({ error: "Mising address for balance fetch", status: 500 });
   }
 
-  const page = searchParams.get("page") || defaultPage;
-  const offset = searchParams.get("offset") || defaultOffset;
-  const sort = searchParams.get("sort") || defaultSort;
-  const pagination = {
-    page,
-    offset,
-    sort,
-  } as Pagination;
-
-  const transactionsUrl = getTransactionsUrl(address, chainID, pagination);
+  const transactionsUrl = getBalanceUrl(address, chainID);
 
   try {
     const data = await fetch(transactionsUrl, {
@@ -59,6 +44,6 @@ export async function GET(req: NextRequest, res: NextApiResponse<ApiResponse>) {
     }).then((res) => res.json());
     return NextResponse.json({ data: data.result, status: 200 });
   } catch (err) {
-    return NextResponse.json({ error: "Failed to load transactions data", status: 500 });
+    return NextResponse.json({ error: "Failed to load balance data", status: 500 });
   }
 }

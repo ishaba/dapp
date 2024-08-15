@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { SUPPORTED_CHAINS, type SupportedChains } from "@/config/constants";
+import Logo from "@/components/Logo";
 import Link from "next/link";
 import NextLogo from "~icons/logos/nextjs.jsx";
 import UilSearch from "~icons/uil/search";
-import UilTransaction from "~icons/uil/transaction";
 import UilSun from "~icons/uil/sun";
 import VercelLogo from "~icons/logos/vercel.jsx";
 
@@ -58,8 +58,7 @@ export default function ChainPage({ params: { chain } }: { params: { chain: Supp
     <main className="flex min-h-screen flex-col items-center justify-between p-6 lg:-mb-14 lg:p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
-          <UilTransaction className="mr-2" />
-          <span className="mr-2 capitalize">{chain}</span> Transactions Explorer
+          <Logo chain={chain} />
         </div>
         <div className="flex w-full items-center justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <div className="inline-block align-middle">

@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 
+import { Address } from "viem";
 import UilCheck from "~icons/uil/check";
 import UilCopy from "~icons/uil/copy";
 
 const copyInitial = "Copy Address";
 const copySuccess = "Copied!";
 
-export default function AddressEntry({ address }: { address: string }) {
+export default function AddressEntry({ address }: { address: Address }) {
   const [copyText, setCopyText] = useState(copyInitial);
 
   function copyAddress() {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import AddressEntry from "@/components/AddressEntry";
 import BxChevronLeft from "~icons/bx/chevron-left";
 import Link from "next/link";
-import UilTransaction from "~icons/uil/transaction";
+import Logo from "@/components/Logo";
 import fetcher from "@/utils/fetcher";
 import { PaginationSort, type Transaction } from "@/config/types";
 import useSWR from "swr";
@@ -12,14 +12,14 @@ import TimeAgo from "@/components/TimeAgo";
 import { format } from "@/utils/ether";
 import { CHAINS, type SupportedChains } from "@/config/constants";
 import UilArrowDown from "~icons/uil/arrow-down";
+import AddressBalance from "@/components/AddressBalance";
+import { Address } from "viem";
 
 const initialSort = PaginationSort.DESC;
 
-export default function AddressPage({ params: { address, chain } }: { params: { address: string; chain: SupportedChains } }) {
+export default function AddressPage({ params: { address, chain } }: { params: { address: Address; chain: SupportedChains } }) {
   const [sortByTampStamp, setSortByTampStamp] = useState<PaginationSort | null>(initialSort);
   const [sortByValue, setSortByValue] = useState<PaginationSort | null>(null);
-
-  const balance = 0;
 
   const setSortingByTimeStamp = () => {
     if (sortByTampStamp === PaginationSort.DESC) {
@@ -38,7 +38,7 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
     setSortByTampStamp(null);
   };
 
-  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}&sort=${sortByTampStamp}`, fetcher<{ data: Transaction[] }>, {
+  const { data, isLoading, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/api/transactions?address=${address}&chain=${chain}&sort=${sortByTampStamp}`, fetcher<{ data: Transaction[] }>, {
     refreshInterval: 3000,
   });
 
@@ -71,17 +71,14 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <Link href={`/${chain}`} className="group relative flex hover:text-primary">
             <BxChevronLeft className="absolute -left-5 top-0 translate-x-1 opacity-0 transition-all duration-100 ease-out group-hover:translate-x-0 group-hover:opacity-80 group-hover:duration-200" />
-            <UilTransaction className="mr-2" />
-            <span className="mr-2 capitalize">{chain}</span> Transactions Explorer
+            <Logo chain={chain} />
           </Link>
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
           <AddressEntry address={address} />
         </div>
         <div className="flex w-full justify-center pb-6 pt-8 font-bold lg:static lg:w-auto lg:rounded-xl lg:p-4">
-          <div>
-            <span className="opacity-50">Balance:</span> {balance}
-          </div>
+          <AddressBalance address={address} chain={chain} />
         </div>
       </div>
 
@@ -104,7 +101,7 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
           </div>
 
           {transactions?.map(({ hash, timeStamp, value }) => (
-            <div key={hash} className="flex border-b border-b-white/10 transition-colors hover:bg-black/5 hover:dark:bg-white/10">
+            <div key={hash} className="flex border-b border-b-white/10 text-xs transition-colors hover:bg-black/5 hover:dark:bg-white/10">
               <div className="w-8/12 p-3 text-left font-mono">
                 <Link className="text-primary" href={`../../tx/${hash}`}>
                   {hash}
