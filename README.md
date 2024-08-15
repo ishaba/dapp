@@ -24,7 +24,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 [✓] – Add polygon chain
 [✓] – Add transaction confirmation status
 [ ] – Add errors handling
-[ ] – Add loading states
+[✓] – Add loading states
 [✓] – Add copy to clipboard
 [✓] – Polish styles
 

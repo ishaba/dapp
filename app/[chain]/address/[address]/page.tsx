@@ -13,6 +13,7 @@ import { BxChevronLeft, UilArrowDown } from "@/config/icons";
 import AddressBalance from "@/components/AddressBalance";
 import { Address } from "viem";
 import { getTransactionsFetchUrl } from "@/utils/api";
+import LoaderTxList from "@/components/LoaderTxList";
 
 const initialSort = PaginationSort.DESC;
 
@@ -38,10 +39,6 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
   };
 
   const { data, isLoading, error } = useSWR<{ data: Transaction[] }>(getTransactionsFetchUrl({ address, chain, sort: sortByTampStamp }));
-
-  if (isLoading) {
-    // TODO: Add loader
-  }
 
   if (error) {
     // TODO: Add error handler
@@ -84,44 +81,48 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
         </div>
       </div>
 
-      <div className="mt-10 w-full lg:max-w-4xl">
-        <div className="w-full rounded-md border border-white/10 text-sm">
-          <div className="flex flex-row border-b border-b-white/10">
-            <div className="hidden w-8/12 p-3 text-left opacity-40 md:block">Hash</div>
-            <div className="p-3 text-left lg:w-2/12">
-              <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByTimeStamp}>
-                Timestamp
-                {sortByTampStamp && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByTampStamp === PaginationSort.ASC && "rotate-180"}`} />}
-              </button>
-            </div>
-            <div className="p-3 text-left lg:w-2/12">
-              <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByValue}>
-                Amount
-                {sortByValue && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByValue === PaginationSort.ASC && "rotate-180"}`} />}
-              </button>
-            </div>
-          </div>
+      {isLoading && <LoaderTxList />}
 
-          {transactions?.map((tx) => (
-            <div key={tx.hash} className="flex flex-col border-b border-b-white/10 py-2 text-xs transition-colors hover:bg-white/5 lg:flex-row lg:py-0">
-              <div className="break-words px-3 py-1 text-left font-mono lg:w-8/12 lg:px-3 lg:py-3">
-                <span className="mr-2 opacity-40 md:hidden">Hash:</span>
-                <Link className="text-primary" href={`./tx/${tx.hash}`}>
-                  {tx.hash}
-                </Link>
+      {!isLoading && (
+        <div className="mt-10 w-full lg:max-w-4xl">
+          <div className="w-full rounded-md border border-white/10 text-sm">
+            <div className="flex flex-row border-b border-b-white/10">
+              <div className="hidden w-8/12 p-3 text-left opacity-40 md:block">Hash</div>
+              <div className="p-3 text-left lg:w-2/12">
+                <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByTimeStamp}>
+                  Timestamp
+                  {sortByTampStamp && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByTampStamp === PaginationSort.ASC && "rotate-180"}`} />}
+                </button>
               </div>
-              <div className="px-3 py-1 text-left lg:w-2/12 lg:px-3 lg:py-3">
-                <span className="mr-2 opacity-40 md:hidden">Timestamp:</span>
-                <TimeAgo timeStamp={tx.timeStamp} />
-              </div>
-              <div className="px-3 py-1 text-left font-mono lg:w-2/12 lg:px-3 lg:py-3">
-                <span className="mr-2 opacity-40 md:hidden">Amount:</span>
-                {formatEther(tx.value)} {CHAINS[chain].nativeCurrency.symbol}
+              <div className="p-3 text-left lg:w-2/12">
+                <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByValue}>
+                  Amount
+                  {sortByValue && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByValue === PaginationSort.ASC && "rotate-180"}`} />}
+                </button>
               </div>
             </div>
-          ))}
+
+            {transactions?.map((tx) => (
+              <div key={tx.hash} className="flex flex-col border-b border-b-white/10 py-2 text-xs transition-colors hover:bg-white/5 lg:flex-row lg:py-0">
+                <div className="break-words px-3 py-1 text-left font-mono lg:w-8/12 lg:px-3 lg:py-3">
+                  <span className="mr-2 opacity-40 md:hidden">Hash:</span>
+                  <Link className="text-primary" href={`./tx/${tx.hash}`}>
+                    {tx.hash}
+                  </Link>
+                </div>
+                <div className="px-3 py-1 text-left lg:w-2/12 lg:px-3 lg:py-3">
+                  <span className="mr-2 opacity-40 md:hidden">Timestamp:</span>
+                  <TimeAgo timeStamp={tx.timeStamp} />
+                </div>
+                <div className="px-3 py-1 text-left font-mono lg:w-2/12 lg:px-3 lg:py-3">
+                  <span className="mr-2 opacity-40 md:hidden">Amount:</span>
+                  {formatEther(tx.value)} {CHAINS[chain].nativeCurrency.symbol}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </main>
   );
 }
