@@ -25,7 +25,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 [ ] – Add polygon chain
 [ ] – Add errors handling
 [ ] – Add loading states
-[ ] – Add copy to clipboard
+[✓] – Add copy to clipboard
 [ ] – Polish styles
 
 [ ] – Check mobile

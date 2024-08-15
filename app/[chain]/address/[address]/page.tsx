@@ -58,12 +58,12 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
         <div className="w-full rounded-md border border-white/10 text-sm">
           <div className="flex border-b border-b-white/10">
             <div className="w-8/12 p-3 text-left opacity-40">Hash</div>
-            <div className="w-2/12 p-3 text-center">
+            <div className="w-2/12 p-3 text-left">
               <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={changeSort}>
                 Timestamp <UilArrowDown className="inline-block" />
               </button>
             </div>
-            <div className="w-2/12 p-3 text-right">
+            <div className="w-2/12 p-3 text-left">
               <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={changeSort}>
                 Amount <UilArrowUp className="inline-block opacity-0" />
               </button>
@@ -72,15 +72,15 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
           {/* TODO: Refactor this should be just data */}
           {data?.data?.map(({ hash, timeStamp, value }) => (
             <div key={hash} className="flex border-b border-b-white/10 transition-colors hover:bg-black/5 hover:dark:bg-white/10">
-              <div className="w-8/12 p-3 text-left">
+              <div className="w-8/12 p-3 text-left font-mono">
                 <Link className="text-primary" href={`../../tx/${hash}`}>
                   {hash}
                 </Link>
               </div>
-              <div className="w-2/12 p-3 text-center">
+              <div className="w-2/12 p-3 text-left">
                 <TimeAgo timeStamp={timeStamp} />
               </div>
-              <div className="w-2/12 p-3 text-right">
+              <div className="w-2/12 p-3 text-left font-mono">
                 {format(value)} {CHAINS[chain].nativeCurrency.symbol}
               </div>
             </div>
