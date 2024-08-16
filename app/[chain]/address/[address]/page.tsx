@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import CopyButton from "@/components/CopyButton";
 import Link from "next/link";
 import Logo from "@/components/Logo";
@@ -14,48 +13,18 @@ import AddressBalance from "@/components/AddressBalance";
 import { Address } from "viem";
 import { getTransactionsFetchUrl } from "@/utils/api";
 import LoaderTxList from "@/components/LoaderTxList";
-
-const initialSort = PaginationSort.DESC;
+import { useTransitionsSort } from "@/hooks/useTransactionsSort";
 
 export default function AddressPage({ params: { address, chain } }: { params: { address: Address; chain: SupportedChains } }) {
-  const [sortByTampStamp, setSortByTampStamp] = useState<PaginationSort | undefined>(initialSort);
-  const [sortByValue, setSortByValue] = useState<PaginationSort | undefined>(undefined);
+  const { sortingOptions, sortTransaction, sortByTimeStamp, sortByValue } = useTransitionsSort();
 
-  const setSortingByTimeStamp = () => {
-    if (sortByTampStamp === PaginationSort.DESC) {
-      setSortByTampStamp(PaginationSort.ASC);
-    } else {
-      setSortByTampStamp(PaginationSort.DESC);
-    }
-    setSortByValue(undefined);
-  };
-  const setSortingByValue = () => {
-    if (sortByValue === PaginationSort.DESC) {
-      setSortByValue(PaginationSort.ASC);
-    } else {
-      setSortByValue(PaginationSort.DESC);
-    }
-    setSortByTampStamp(undefined);
-  };
-
-  const { data, isLoading, error } = useSWR<{ data: Transaction[] }>(getTransactionsFetchUrl({ address, chain, sort: sortByTampStamp }));
+  const { data, isLoading, error } = useSWR<{ data: Transaction[] }>(getTransactionsFetchUrl({ address, chain, sort: sortingOptions.timeStamp }));
 
   if (error) {
     // TODO: Add error handler
   }
 
-  // NOTE: ehterscan api doesn't support sort by value
-  // since we don't need to implement pagination
-  // it is not a big problem we just can sort data array localy
-  function sortTransaction(data: Transaction[] | undefined) {
-    if (sortByValue && data) {
-      const sorter = sortByValue === PaginationSort.DESC ? -1 : 1;
-      return [...data].sort((a, b) => (a.value < b.value ? 1 * sorter : a.value > b.value ? -1 * sorter : 0));
-    }
-    return data;
-  }
-
-  // TODO: Something strange happened here
+  // TODO: Something strange happened here with `data?.data`
   // Refactor this should be just data
   const transactions = sortTransaction(data?.data);
 
@@ -89,15 +58,15 @@ export default function AddressPage({ params: { address, chain } }: { params: { 
             <div className="flex flex-row border-b border-b-black/10 dark:border-b-white/10">
               <div className="hidden w-8/12 p-3 text-left opacity-40 md:block">Hash</div>
               <div className="p-3 text-left lg:w-2/12">
-                <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByTimeStamp}>
+                <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={sortByTimeStamp}>
                   Timestamp
-                  {sortByTampStamp && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByTampStamp === PaginationSort.ASC && "rotate-180"}`} />}
+                  {sortingOptions.timeStamp && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortingOptions.timeStamp === PaginationSort.ASC && "rotate-180"}`} />}
                 </button>
               </div>
               <div className="p-3 text-left lg:w-2/12">
-                <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={setSortingByValue}>
+                <button className="opacity-40 hover:opacity-70 active:scale-95" onClick={sortByValue}>
                   Amount
-                  {sortByValue && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortByValue === PaginationSort.ASC && "rotate-180"}`} />}
+                  {sortingOptions.value && <UilArrowDown className={`inline-block transition-transform ease-in duration-200 ${sortingOptions.value === PaginationSort.ASC && "rotate-180"}`} />}
                 </button>
               </div>
             </div>

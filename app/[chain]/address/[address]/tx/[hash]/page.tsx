@@ -14,17 +14,21 @@ import TimeAgo from "@/components/TimeAgo";
 import { formatEther, formatGasPrice, formatWeiToEth } from "@/utils/ether";
 import { getTransactionsFetchUrl, getTxStatusFetchUrl } from "@/utils/api";
 import { BxChevronLeft, LightningIcon, StatusFailIcon, StatusSuccessIcon } from "@/config/icons";
+import { useTransitionsSort } from "@/hooks/useTransactionsSort";
 
 type TxPageParams = { address: Address; hash: Hash; chain: SupportedChains };
 
 export default function TxPage({ params: { address, hash, chain } }: { params: TxPageParams }) {
+  const { sortingOptions } = useTransitionsSort();
+
   // Just realised that etherscan do not have endpoint to get info of tx by it's hash
   // I was counting on this :/ In order to save the time let's use this approuch as temporary solution
   // placing tx page under address page
   // possible bettter would be to make some client side store and get alredy loaded data from there
   // and we steel need to update this data somehow...
   // anyway! there is some other tasks which i find better to proceed with atm
-  const { data, isLoading, error } = useSWR<{ data: Transaction[] }>(getTransactionsFetchUrl({ address, chain }));
+  // OR! we just need to keep the key for swr cache across pages then it will do the job!
+  const { data, isLoading, error } = useSWR<{ data: Transaction[] }>(getTransactionsFetchUrl({ address, chain, sort: sortingOptions.timeStamp }));
 
   const transactions = data?.data;
   const tx = transactions?.find((tx) => tx.hash === hash);
